@@ -1,2 +1,4 @@
 /train.json
 /test.json
+/train_cleaned.parquet
+/test_cleaned.parquet
