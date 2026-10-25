@@ -1,0 +1,5 @@
+outs:
+- md5: 1a061fe7cfcc61b7480f47063d31606f
+  size: 12415067
+  hash: md5
+  path: train.json
