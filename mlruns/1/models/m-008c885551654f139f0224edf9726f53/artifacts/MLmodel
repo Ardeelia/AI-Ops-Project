@@ -1,0 +1,22 @@
+artifact_path: /home/pulkit/AI-Ops-Project/mlruns/1/models/m-008c885551654f139f0224edf9726f53/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.14.6
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBClassifier
+    model_format: ubj
+    xgb_version: 3.4.1
+mlflow_version: 3.17.2
+model_id: m-008c885551654f139f0224edf9726f53
+model_size_bytes: 4552912
+model_uuid: m-008c885551654f139f0224edf9726f53
+prompts: null
+run_id: 9c72f137ba914e7484f1c70335c692b1
+utc_time_created: '2026-10-28 10:14:02.871149'
