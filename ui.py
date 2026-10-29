@@ -14,7 +14,7 @@ def get_base64_image(file_path):
 
 bg_image_data = get_base64_image(IMAGE_PATH)
 
-API_HOST = os.getenv("API_HOST", "http://api:8000")
+API_HOST = os.getenv("API_HOST", "http://localhost:8000")
 API_URL = f"{API_HOST}/predict"
 
 st.set_page_config(

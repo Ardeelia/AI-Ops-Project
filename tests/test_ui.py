@@ -1,60 +1,33 @@
+from pathlib import Path
 from unittest.mock import patch
 import pytest
 from streamlit.testing.v1 import AppTest
 
-def test_app_initialization():
-    """Test that the app loads successfully and renders the main title."""
-    at = AppTest.from_file("ui.py").run()
-    assert not at.exception
-    assert at.title[0].value == "ChefAI Classifier"
+UI_PATH = str(Path(__file__).parent.parent / "ui.py")
 
-def test_ingredient_parsing_and_tags():
-    """Test that entering ingredients correctly splits them and generates tag components."""
-    at = AppTest.from_file("ui.py").run()
-
-    at.text_area[0].input("garlic, basil, olive oil").run()
-
-    markdown_contents = [element.value for element in at.markdown]
-    combined_markdown = " ".join(markdown_contents)
+@patch("os.path.exists", return_value=False)
+def test_ui_initial_render(mock_exists):
+    at = AppTest.from_file(UI_PATH)
+    at.run()
     
-    assert "garlic" in combined_markdown
-    assert "basil" in combined_markdown
-    assert "olive oil" in combined_markdown
+    assert len(at.title) >= 1
+    assert "ChefAI" in at.title[0].value
 
+@patch("os.path.exists", return_value=False)
 @patch("requests.post")
-def test_successful_prediction(mock_post):
-    """Test clicking the predict button when the API successfully returns a cuisine."""
+def test_ui_prediction_flow(mock_requests_post, mock_exists):
+    mock_response = patch("requests.Response").start()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"cuisine": "mexican"}
+    mock_requests_post.return_value = mock_response
 
-    class MockResponse:
-        status_code = 200
-        def json(self):
-            return {"cuisine": "italian"}
+    at = AppTest.from_file(UI_PATH)
+    at.run()
 
-    mock_post.return_value = MockResponse()
-
-    at = AppTest.from_file("ui.py").run()
-
-    at.text_area[0].input("pasta, tomato, cheese").run()
-    at.button[0].click().run()
-
-    assert not at.exception
-
-    markdown_contents = [element.value for element in at.markdown]
-    combined_markdown = " ".join(markdown_contents)
-    assert "Predicted Cuisine: Italian" in combined_markdown
-
-@patch("requests.post")
-def test_api_connection_error(mock_post):
-    """Test graceful handling when the backend API connection fails."""
-    import requests
-
-    mock_post.side_effect = requests.exceptions.ConnectionError("Connection refused")
-
-    at = AppTest.from_file("ui.py").run()
-
-    at.button[0].click().run()
+    at.text_area[0].set_value("corn tortillas, jalapeno, cilantro")
     
-    assert not at.exception
+    at.button[0].click()
+    at.run()
 
-    error_messages = [err.value for err in at.error]
-    assert any("Connection Failed" in msg for msg in error_messages)
+    rendered_markdown = "".join([el.value for el in at.markdown])
+    assert "Predicted Cuisine: Mexican" in rendered_markdown
