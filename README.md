@@ -11,4 +11,4 @@ The final code has been dockerized as a container and pushed to dockerhub. It al
 
 
 A demo video of the same showing the ease of using the app and its features can be found at
-"https://drive.google.com/file/d/1XExtVyec83xuFjWXFao7bmw9Yw5787xb/view?usp=sharing".
+"https://drive.google.com/drive/folders/1SccX9rW6o63DIcSaLy1H9gzPFcEoNj-i?usp=sharing".
